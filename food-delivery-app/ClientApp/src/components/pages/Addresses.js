@@ -1,36 +1,31 @@
-﻿import React, { Component } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import TopHeader from '../doms/TopHeader';
-import Address from '../doms/Address';
+import AddressBox from '../doms/AddressBox';
+import Button from '../doms/Button';
+import { Link } from 'react-router-dom';
 
-export default class Addresses extends Component {
-    static displayName = Addresses.name;
-    constructor(props) {
-        super(props);
-        this.state = {
-            addresses: []
-        };
-    }
-    render() {
-        return (
-            <>
-                <TopHeader text_content="Addresses" />
-                <div className="address-list">
-                    <Address title="My home" details="What the hell" selected={ true } />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-                    <Address title="My home" details="What the hell" />
-
-                </div>
-                <div className="addresses-bottom-div center">
-                    <input type="button" className="restaurants-btn" value="Add Address" />
-                </div>
-            </>
-        );
-    }
+export default function Addresses(props) {
+    const [addresses, setAddresses] = useState([]);
+    useEffect(()=>{
+        setAddresses(JSON.parse(localStorage.getItem("addresses")));
+    }, []);
+    return (
+        <>
+            <TopHeader text_content="Addresses" />
+            <div className="address-list">
+                {addresses.map((e, i) => {
+                    let values = Object.values(e);
+                    values = values.slice(1,values.length);
+                    return (<AddressBox key={i} title={e.name} details={values.join(", ")} />)
+                })}
+            </div>
+            <div style={{
+                position:"fixed", bottom:"0",height:"7em",width:"100vw", padding:"2em 3em 2em 3em"
+            }} className="center">
+                <Link style={{textDecoration:"none",height:"100%", width:"100%",
+            }} to="address"><Button value="Add Address" /></Link>
+            </div>
+        </>
+    );
 
 }

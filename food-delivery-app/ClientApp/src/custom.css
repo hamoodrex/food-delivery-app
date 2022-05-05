@@ -2,7 +2,7 @@
 html, body{
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
     font-family: sans-serif;
 }
 .home-div{
@@ -18,15 +18,11 @@ html, body{
     box-shadow: inset 0px 4px 108px 6px rgba(255, 255, 255, 0.25);
     text-align: center;
     font-size: larger;
+    color: white;
+    position: relative;
 }
 .restaurants-btn-div{
     height: 20vh;
-}
-.addresses-bottom-div{
-    height: 10vh;
-    position: fixed;
-    width: 100vw;
-    bottom: 0px;
 }
 .horizontal-center{
     display: grid;
@@ -37,7 +33,7 @@ html, body{
     align-items: center;
 }
 .center {
-    display: grid;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -109,7 +105,7 @@ html, body{
 }
 
 .address-list {
-    height: 80vh;
+    height: calc(100vh - 67.2px - 7em);
     color: white;
     overflow-y: auto;
     overflow-x: hidden;
@@ -149,4 +145,47 @@ html, body{
 }
 .selected-btn:active {
     filter: brightness(80%);
+}
+
+.qty-btn{
+    grid-column-start: 2;
+    grid-column-end: 7;
+    grid-row: 4;
+}
+
+.qtyadd-btn{
+    grid-row: 3;
+    grid-column: 8;
+}
+
+.qtydel-btn{
+    grid-row: 4;
+    grid-column: 8;
+}
+
+.max-height-width{
+    height: 100%;
+    width: 100%;
+}
+
+.text-box{
+    border: none;
+    border: 1px solid #CACACA;
+    box-sizing: border-box;
+    box-shadow: inset 0px 0px 3px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 1em;
+}
+.pad-label{
+    padding: 0.5em;
+    font-weight: 600;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using food_delivery_app.Controllers.data;
 
 namespace food_delivery_app
 {
@@ -28,6 +29,13 @@ namespace food_delivery_app
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Api", Version = "v1" });
             });
+
+            // Cors stuff
+            services.AddCors(o => o.AddPolicy("Policy", builder =>
+            {
+                builder.AllowAnyMethod()
+                       .AllowAnyHeader().AllowAnyOrigin();
+            }));
 
             // Session stuff
             services.AddMvc().AddSessionStateTempDataProvider();
@@ -59,11 +67,15 @@ namespace food_delivery_app
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRouting();
+
+            app.UseCors("Policy");
+            // Postgresql connection establishment
+            Database db = new();
+
             
             // Session
             app.UseSession();
