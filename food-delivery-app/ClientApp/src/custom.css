@@ -1,7 +1,6 @@
 /* Provide sufficient contrast against white background */
 html, body{
-    height: 100%;
-    width: 100%;
+    width: 100vw;
     overflow-x: hidden;
     font-family: sans-serif;
 }
@@ -12,17 +11,18 @@ html, body{
 
 .top-header {
     top: 0px;
-    width: 100%;
+    width: 100vw;
     padding: 1em 1em 1em 1em;
     background: #FF0000;
-    box-shadow: inset 0px 4px 108px 6px rgba(255, 255, 255, 0.25);
     text-align: center;
     font-size: larger;
     color: white;
-    position: relative;
+    position: fixed;
+    z-index: 999;
 }
 .restaurants-btn-div{
-    height: 20vh;
+    height: 150px;
+    padding: 3em
 }
 .horizontal-center{
     display: grid;
@@ -105,11 +105,8 @@ html, body{
 }
 
 .address-list {
-    height: calc(100vh - 67.2px - 7em);
-    color: white;
     overflow-y: auto;
     overflow-x: hidden;
-    border-bottom: 1px solid #000000;
     background-color: rgb(227 227 227);
 }
 .address {
@@ -149,18 +146,18 @@ html, body{
 
 .qty-btn{
     grid-column-start: 2;
-    grid-column-end: 7;
-    grid-row: 4;
+    grid-column-end: 6;
+    grid-row: 2;
 }
 
 .qtyadd-btn{
-    grid-row: 3;
-    grid-column: 8;
+    grid-row: 2;
+    grid-column: 7;
 }
 
 .qtydel-btn{
-    grid-row: 4;
-    grid-column: 8;
+    grid-row: 2;
+    grid-column: 6;
 }
 
 .max-height-width{
@@ -175,9 +172,11 @@ html, body{
     box-shadow: inset 0px 0px 3px 1px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     padding: 1em;
+    margin-bottom: 1em;
 }
 .pad-label{
     padding: 0.5em;
+    margin-bottom: 0;
     font-weight: 600;
 }
 

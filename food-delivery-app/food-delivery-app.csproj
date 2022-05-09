@@ -54,9 +54,4 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
-
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="taskkill /IM &quot;node.exe&quot; /F" />
-  </Target>
-
 </Project>

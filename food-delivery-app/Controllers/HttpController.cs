@@ -10,6 +10,7 @@ using food_delivery_app.Controllers.data.structures;
 using Newtonsoft.Json;
 using Npgsql;
 using Microsoft.AspNetCore.Cors;
+using System.Text.Json;
 
 namespace food_delivery_app.Controllers
 {
@@ -18,10 +19,6 @@ namespace food_delivery_app.Controllers
     [Route("")]
     public class HttpController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<HttpController> _logger;
 
@@ -30,11 +27,20 @@ namespace food_delivery_app.Controllers
             _logger = logger;
         }
 
-        [HttpGet("/restaurants")]
-        public async Task<string> GetRestaurants() {
+        [HttpPost("/restaurants")]
+        public async Task<string> GetRestaurants([FromBody]object json) {
+            Address address = JsonConvert.DeserializeObject<Address>(json.ToString());
+            if (address == null){
+                return "[]";
+            }
             List<Restaurant> list = new();
             // Get from DB restaurants
-            await using var cmd = new NpgsqlCommand("select id,name,description,rating from restaurants", Database.connection);
+            await using var cmd = new NpgsqlCommand("select id,name,description,rating from restaurants where country = ($1) and district = ($2)", Database.connection){
+                Parameters = {
+                    new() { Value = address.country},
+                    new() { Value = address.district}
+                }
+            };
             await using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {

@@ -47,15 +47,18 @@ export default function AddItem(props){
                         );
                 })}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "auto auto auto auto auto auto auto auto auto", gridTemplateRows: "auto auto auto auto auto",
-             gap:"0.7em",
-             position:"fixed",
-             bottom:"0",left:"0",width:"100vw", 
-             borderTop: "1px solid black",
-             height: "200px"}}>
-                 <div className="qty-btn" onClick={()=>{
-                     add_to_cart({...item, quantity});
-                     history.goBack();
+            <div style={{ display: "grid", gridTemplateColumns: "auto auto auto auto auto auto auto auto", gridTemplateRows: "auto auto auto auto",
+             gap:"0.5em",width:"100vw",
+             height: "140px"}}>
+                 <div className="qty-btn" 
+                    onClick={()=>{
+                        let valid = item.selections.find(e => {return !e.optional}) === undefined || item.selections.find(e => {return !e.optional && e.selected}) !== undefined;
+                        if (!valid){
+                            alert("You must choose at least one non-optional selection.")
+                            return;
+                        }
+                        add_to_cart({...item, quantity}, props.match.params.restaurant_id);
+                        history.goBack();
                     }}>
                     <Button value={`Add (${quantity})`} />
                  </div>

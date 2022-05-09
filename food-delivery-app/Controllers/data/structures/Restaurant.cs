@@ -18,7 +18,7 @@ namespace food_delivery_app.Controllers.data.structures
         public async Task QueryRestaurant(int id)
         {
             this.id = id;
-            string query = "select name,description,rating,country,district,city from restaurants where restaurants.id = ($1);";
+            string query = "select name,description,rating,country,district from restaurants where restaurants.id = ($1);";
 
             await using var cmd = new NpgsqlCommand(query, Database.connection)
             {
@@ -37,7 +37,6 @@ namespace food_delivery_app.Controllers.data.structures
                 {
                     country = reader.GetString(3),
                     district = reader.GetString(4),
-                    city = reader.GetString(5),
                 };
             }
         }

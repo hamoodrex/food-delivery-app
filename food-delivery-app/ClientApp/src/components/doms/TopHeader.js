@@ -7,6 +7,7 @@ export default function TopHeader(props) {
         history.goBack();
     }
     return (
+    <>
         <div className="top-header">
             {!props.noBack && <img src="images/left-arrow.svg" style={{
                 height:"0.7em",
@@ -14,5 +15,8 @@ export default function TopHeader(props) {
                 onClick={click} />}
             { props.text_content }
         </div>
+        <div style={{height:"67.2px"}}></div>
+    </>
+        
     );
 }

@@ -12,6 +12,8 @@ import Cart from './components/pages/Cart';
 import Address from './components/pages/Address';
 import OrderHistory from './components/pages/OrderHistory';
 import Settings from './components/pages/Settings';
+import Checkout from './components/pages/Checkout';
+import PersonalInformation from './components/pages/PersonalInformation';
 
 export const customHistory = createBrowserHistory();
 
@@ -19,26 +21,31 @@ export const customHistory = createBrowserHistory();
 export default function App() {
     useEffect(()=>{
         if (!localStorage.getItem("cart"))
-            localStorage.setItem("cart",JSON.stringify([]));
+            localStorage.setItem("cart",JSON.stringify({}));
         if (!localStorage.getItem("addresses"))
             localStorage.setItem("addresses", JSON.stringify([]));
         if (!localStorage.getItem("personal_info"))
             localStorage.setItem("personal_info", JSON.stringify({}));
         if (!localStorage.getItem("order_history"))
             localStorage.setItem("order_history", JSON.stringify([]));
+        if (!localStorage.getItem("address"))
+            localStorage.setItem("address", "");
+        
     },[]);
     return (
         <BrowserRouter history={customHistory}>
             <Switch>
-                <Route exact path="/" component={Home} / >
+                <Route exact path="/" component={Home} />
                 <Route path="/addresses" component={Addresses} />
                 <Route path="/restaurants" component={Restaurants} />
                 <Route path="/menu/:id" component={Restaurant} />
-                <Route path="/add_item/:id" component={AddItem} />
+                <Route path="/add_item/:restaurant_id/:id" component={AddItem} />
                 <Route path="/cart/:id" component={Cart} />
                 <Route path="/address/:id?" component={Address} />
                 <Route path="/order_history" component={OrderHistory} />
                 <Route path="/settings" component={Settings} />
+                <Route path="/checkout/:id" component={Checkout} />
+                <Route path="/personal_information" component={PersonalInformation} />
             </Switch>
         </BrowserRouter>
     );

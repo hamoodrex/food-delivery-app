@@ -59,7 +59,7 @@ export default function Restaurant(props){
                     <SubMenuHeader title={e.title}/>
                     {e?.items.map((e1) => {
                         return (
-                        <Link key={`${e.id}:${e1.id}`} style={{textDecoration:"none"}} to={`/add_item/${e1.id}`}>
+                        <Link key={`${e.id}:${e1.id}`} style={{textDecoration:"none"}} to={`/add_item/${menu.id}/${e1.id}`}>
                             <Item key={`${e.id}:${e1.id}`} name={e1.name} description={e1.description} price={e1.price} />
                         </Link>
                         );
