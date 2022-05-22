@@ -65,6 +65,7 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
+*.env
 applicationhost.config
 
 # Chutzpah Test files

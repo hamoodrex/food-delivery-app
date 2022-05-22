@@ -9,9 +9,18 @@ namespace food_delivery_app.Controllers.data.structures
     {
         public int id;
         public int restaurant_id;
-        public DateTime date;
+        public long date;
         public Address address;
-        public OrderStatus status;
+        public OrderStatus status = OrderStatus.NOT_REVIEWED;
+        public PaymentMethod payment_method;
+        public double price;
+        public List<Item> cart;
+        public string comments;
+    }
+
+    public enum PaymentMethod{
+        CASH,
+        CREDIT_CARD
     }
 
     public enum OrderStatus
@@ -20,7 +29,8 @@ namespace food_delivery_app.Controllers.data.structures
         ACCEPTED,
         PREPARING,
         ON_THE_WAY,
-        DELIVERED
+        DELIVERED,
+        REJECTED
     }
 
 }

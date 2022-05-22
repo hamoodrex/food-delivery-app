@@ -15,30 +15,35 @@ namespace food_delivery_app.Controllers.data.structures
         public Menu menu = new Menu();
         public Address address;
 
-        public async Task QueryRestaurant(int id)
+        public void QueryRestaurant(int id)
         {
-            this.id = id;
-            string query = "select name,description,rating,country,district from restaurants where restaurants.id = ($1);";
+            lock(Database.connection)
+            {
+                this.id = id;
+                string query = "select name,description,rating,country,district from restaurants where restaurants.id = ($1);";
 
-            await using var cmd = new NpgsqlCommand(query, Database.connection)
-            {
-                Parameters =
+                using var cmd = new NpgsqlCommand(query, Database.connection)
                 {
-                    new() { Value = id },
-                }
-            };
-            await using var reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                name = reader.GetString(0);
-                description = reader.GetString(1);
-                rating = reader.GetDouble(2);
-                address = new Address()
-                {
-                    country = reader.GetString(3),
-                    district = reader.GetString(4),
+                    Parameters =
+                    {
+                        new() { Value = id },
+                    }
                 };
+                cmd.Prepare();
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    name = reader.GetString(0);
+                    description = reader.GetString(1);
+                    rating = reader.GetDouble(2);
+                    address = new Address()
+                    {
+                        country = reader.GetString(3),
+                        district = reader.GetString(4),
+                    };
+                }
             }
+
         }
 
     }

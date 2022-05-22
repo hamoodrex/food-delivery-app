@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Button from "../doms/Button";
 import TopHeader from "../doms/TopHeader";
-import { get_cart } from "../../storage/Cart";
+import { delete_cart, get_cart } from "../../storage/Cart";
 import { get_current_address } from "../../storage/Address";
+import { create_order } from "../../api/fetch";
+import { add_order } from "../../storage/Order";
 
 export default function Checkout(props){
+    const history = useHistory();
     const [comments, setComments] = useState("");
     const [price,setPrice] = useState(0);
     const [addressDetails,setAddressDetails] = useState("");
@@ -27,6 +30,7 @@ export default function Checkout(props){
         setCart(items);
         let total = 0;
         items.forEach(item=>{
+            item.selections = item.selections.filter(selection => {return selection.selected});
             total += calc_price(item)*item.quantity;
         });
         setPrice(total);
@@ -63,7 +67,11 @@ export default function Checkout(props){
                 }}>
                 <b style={{marginBottom: "1em"}}>Total price: ${price}</b>
                 <div style={{height:"100%", width:"100%"}} onClick={()=>{
-                    console.log({method,cart,address,comments});
+                    (async ()=>{
+                        add_order(JSON.parse(await create_order({restaurant_id: props.match.params.id,payment_method: method, date: Date.now(),address,cart,price, comments})));
+                        delete_cart(props.match.params.id);
+                        history.push("/");
+                    })();
                 }}>
                     <Button value="Confirm Order" />
                 </div>

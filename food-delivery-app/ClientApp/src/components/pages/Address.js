@@ -54,7 +54,7 @@ export default function Address(props){
                     }
 
                 }
-                addresses[props.match.params.id] = {...address, country,district,city,details,long: location.coords.longitude,lat: location.coords.latitude};
+                addresses[props.match.params.id] = {...address, country,district,city,details,longitude: location.coords.longitude,latitude: location.coords.latitude};
                 localStorage.setItem("addresses",JSON.stringify(addresses));
                 history.goBack();
                 return;
@@ -67,7 +67,7 @@ export default function Address(props){
             return;
         }
         addresses.push({
-            name,country,district,city,details,long: location.coords.longitude,lat: location.coords.latitude
+            name,country,district,city,details,longitude: location.coords.longitude,latitude: location.coords.latitude
         });
         localStorage.setItem("addresses",JSON.stringify(addresses));
         history.goBack();

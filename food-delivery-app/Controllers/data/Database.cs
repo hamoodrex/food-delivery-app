@@ -8,16 +8,17 @@ namespace food_delivery_app.Controllers.data
 {
     public class Database
     {
-        public string host = "localhost";
-        public string port = "5432";
-        public string username = "postgres";
-        public string password = "";
-        public string database = "food_app";
+        private CustomEnvironment env = new CustomEnvironment();
 
         public static NpgsqlConnection connection;
 
         public Database()
         {
+            string host = env.getValue("host");
+            string port = env.getValue("port");
+            string username = env.getValue("username");
+            string password = env.getValue("password");
+            string database = env.getValue("database");
 
             var connString = $"Host={host};Port={port};Username={username};Database={database}";
             Connect(connString);

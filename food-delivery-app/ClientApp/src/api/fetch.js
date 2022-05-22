@@ -24,4 +24,11 @@ const get_item = async(item_id) => {
     return await request("get",`item?item_id=${item_id}`);
 }
 
-export {request,get_menu,get_restaurants,get_item}
+const create_order = async (order) => {
+    return await request("post", "create_order", order);
+}
+
+const get_status = async (order_id) => {
+    return await request("get", `order_status?order_id=${order_id}`);
+}
+export {request,get_menu,get_restaurants,get_item,create_order,get_status}

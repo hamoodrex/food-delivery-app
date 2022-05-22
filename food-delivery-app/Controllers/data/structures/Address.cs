@@ -11,5 +11,7 @@ namespace food_delivery_app.Controllers.data.structures
         public string district;
         public string city;
         public string details;
+        public double latitude;
+        public double longitude;
     }
 }

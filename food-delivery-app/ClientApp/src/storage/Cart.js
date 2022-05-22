@@ -8,6 +8,13 @@ export function add_to_cart(item, restaurant_id){
     localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+export function delete_cart(restaurant_id){
+    let cart = JSON.parse(localStorage.getItem("cart"));
+    delete cart[restaurant_id];
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+}
+
 export function get_cart(restaurant_id){
     var cart = JSON.parse(localStorage.getItem("cart"));
     return cart[restaurant_id] || [];
