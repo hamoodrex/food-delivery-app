@@ -9,7 +9,7 @@ export default function Login(){
     const [password,setPassword] = useState("");
     return (
         <>
-            <TopHeader text_content="Login" noBack />
+            <TopHeader text_content="Login" noMenu />
             <div style={{display:"flex", flexDirection:"column", padding:"3em"}}>
                 <label className="pad-label">E-Mail</label>
                 <input className="text-box" onChange={(e)=>{setEmail(e.target.value)}}/>
@@ -25,9 +25,12 @@ export default function Login(){
                     }
                     let response = await login({email,password});
                     if (!response) return;
-                    console.log(JSON.parse(response));
-                    // localStorage.setItem("auth", response);
-                    //history.replace("/");
+                    response = JSON.parse(response);
+                    console.log(response);
+                    localStorage.setItem("auth", response.auth);
+                    localStorage.setItem("restaurant_id", response.restaurant_id.toString());
+                    localStorage.setItem("is_owner", response.is_owner ? "true":"");
+                    history.replace("/");
                 }}/>
             </div>
         </>

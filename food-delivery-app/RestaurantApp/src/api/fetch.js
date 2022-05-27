@@ -6,14 +6,15 @@ const request = async (method,path,body) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        authToken: localStorage.getItem("auth") || ""
       },
       body: JSON.stringify(body)
     });
     return await rawResponse.json();
 };
 
-const get_active_orders = async(restaurant_id,auth) => {
-    return await request("get",`get_active_orders?restaurant_id=${restaurant_id}&auth=${auth}`);
+const get_active_orders = async(restaurant_id) => {
+    return await request("get",`get_active_orders?restaurant_id=${restaurant_id}`);
 }
 
 const login = async(credentials) => {

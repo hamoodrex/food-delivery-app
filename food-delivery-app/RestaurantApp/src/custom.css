@@ -188,3 +188,32 @@ html, body{
     -ms-user-select: none;
     user-select: none;
 }
+
+.animated-menu{
+    position: fixed;
+    top: 67.2px;
+    z-index:2;
+    background:#eee;
+    height: calc(100vh - 67.2px);
+    border-right: 1px solid black;
+    animation-name: menuanim;
+    animation-duration: 500ms;
+}
+@media (min-width: 0px){
+    .animated-menu{
+        width:100vw;
+    }
+    @keyframes menuanim{
+        from {width: 0px;}
+        to {width: 100vw;}
+    }
+}
+@media (min-width:641px)  {
+    .animated-menu{
+        width:250px;
+    }
+    @keyframes menuanim{
+        from {width: 0px;}
+        to {width: 250px;}
+    }
+}

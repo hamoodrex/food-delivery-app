@@ -10,7 +10,6 @@ using food_delivery_app.Controllers.data.structures;
 using Newtonsoft.Json;
 using Npgsql;
 using Microsoft.AspNetCore.Cors;
-using System.Text.Json;
 
 namespace food_delivery_app.Controllers
 {
@@ -21,7 +20,7 @@ namespace food_delivery_app.Controllers
     {
 
         private readonly ILogger<HttpController> _logger;
-        CustomEnvironment env = new CustomEnvironment();
+        public static CustomEnvironment env = new CustomEnvironment();
 
         public HttpController(ILogger<HttpController> logger)
         {
@@ -194,7 +193,7 @@ namespace food_delivery_app.Controllers
             // object contains credentials.email & credentials.password
             string email = credentials.email;
             string hashed_password = PasswordHasher.hash((string)credentials.password, env["salt"]);
-            using var cmd = new NpgsqlCommand("select is_owner from users where email = ($1) and password = ($2)", Database.connection){
+            using var cmd = new NpgsqlCommand("select is_owner,restaurant_id from users where email = ($1) and password = ($2)", Database.connection){
                 Parameters = {
                     new() {Value = email},
                     new() {Value = hashed_password}
@@ -202,15 +201,18 @@ namespace food_delivery_app.Controllers
             };
             int count = 0;
             bool is_owner = false;
+            int restaurant_id = -1;
             using var reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 if (reader.GetBoolean(0)) is_owner = true;
+                restaurant_id = reader.GetInt32(1);
                 count++;
             }
             reader.Close();
             if (count == 0) return "";
             var obj = new{
+                restaurant_id,
                 auth = CrypticAES.encrypt(JsonConvert.SerializeObject(credentials),env["aeskey"]),
                 is_owner
             };
@@ -237,12 +239,51 @@ namespace food_delivery_app.Controllers
                 return "{}";
             }
         }
-        
+
         [HttpGet("/get_active_orders")]
-        public string GetActiveOrders(int restaurant_id, string auth){
-            return "";
+        public string GetActiveOrders(int restaurant_id,[FromHeader]string authToken){
+            dynamic credentials = JsonConvert.DeserializeObject(CrypticAES.decrypt(authToken,env["aeskey"]));
+            bool is_owner = false;
+            bool confirm = Auth.ConfirmRestaurantCredentials(credentials, restaurant_id, out is_owner);
+            if (!confirm)
+                return "[]";
+            string query = "select * from orders where restaurant_id = ($1) and status < 4";
+            using var cmd = new NpgsqlCommand(query, Database.connection){
+                Parameters = {
+                    new() {Value = restaurant_id}
+                }
+            };
+            cmd.Prepare();
+            using var reader = cmd.ExecuteReader();
+            List<Order> orders = new();
+            while (reader.Read()){
+                Order order = new(){
+                    id = reader.GetInt32(0),
+                    restaurant_id = reader.GetInt32(1),
+                    date = new DateTimeOffset(reader.GetDateTime(2)).ToUnixTimeMilliseconds(),
+                    status = (OrderStatus)reader.GetInt32(3),
+                    address = new Address(){
+                        country = reader.GetString(4),
+                        district = reader.GetString(5),
+                        city = reader.GetString(6),
+                        details = reader.GetString(7),
+                        longitude = reader.GetDouble(9),
+                        latitude = reader.GetDouble(10)
+                    },
+                    payment_method = (PaymentMethod)reader.GetInt32(8),
+                    comments = reader.GetString(11),
+                    price = reader.GetDouble(12)
+                };
+                orders.Add(order);
+            }
+            reader.Close();
+            return JsonConvert.SerializeObject(orders);
         }
 
-        
+        // Next work on here!
+        [HttpGet("/get_order")]
+        public string GetOrder(int order_id){
+            return "{}";
+        }
     }
 }
